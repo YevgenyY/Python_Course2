@@ -55,14 +55,20 @@ class Polyline:
     """Добавляет в ломаную точку Vec2d"""
     def append(self, point):
         self.points.append(point)
-        print("Appended {}, {}".format(point.x, point.y))
 
-        print(self.points)
-
-    """Отрисовка ломаной"""
+    """Отрисовка опорных точек"""
     def draw_points(self, gameDisplay, color=(255,255,255), width=3):
         for p in self.points:
             pygame.draw.circle(gameDisplay, color, p.vec(), width)
+
+    """Отрисовка ломаной"""
+    def draw_line(self, gameDisplay, color=(255,255,255), width=3):
+        for p_n in range(-1, len(self.smooth) - 1):
+                pygame.draw.line(gameDisplay, color,
+                    ( int(self.smooth[p_n].x), int(self.smooth[p_n].y) ),
+                    ( int(self.smooth[p_n + 1].x), int(self.smooth[p_n+1].y) ),
+                    width)
+
 
     def reset(self):
         self.points=[]
@@ -110,6 +116,7 @@ class Knot(Polyline):
 
             self.smooth.extend(self.get_points(ptn, self.count))
 
+
 # =======================================================================================
 # Основная программа
 # =======================================================================================
@@ -118,7 +125,7 @@ if __name__ == "__main__":
     gameDisplay = pygame.display.set_mode(SCREEN_DIM)
     pygame.display.set_caption("MyScreenSaver")
 
-    steps = 2
+    steps = 34 
     working = True
     show_help = False
     pause = True
@@ -152,12 +159,14 @@ if __name__ == "__main__":
             if event.type == pygame.MOUSEBUTTONDOWN:
                 point = Vec2d(event.pos[0], event.pos[1])
                 line.append(point)
+                line.set_points()
 
         gameDisplay.fill((0, 0, 0))
         hue = (hue + 1) % 360
         color.hsla = (hue, 100, 50, 100)
 
         line.draw_points(gameDisplay)
+        line.draw_line(gameDisplay)
 
         if not pause:
             line.set_points()
