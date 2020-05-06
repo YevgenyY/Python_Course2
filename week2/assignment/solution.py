@@ -69,9 +69,21 @@ class Polyline:
                     ( int(self.smooth[p_n + 1].x), int(self.smooth[p_n+1].y) ),
                     width)
 
-
     def reset(self):
         self.points=[]
+        self.smooth=[]
+
+    def count_inc(self):
+        self.count += 1
+        #print(self.count)
+
+    def count_dec(self):
+        self.count -= 1 if self.count > 1 else 0
+        #print(self.count)
+
+    def count_get(self):
+        return self.count
+
 
 class Knot(Polyline):
     def get_point(self, points, alpha, deg=None):
@@ -116,6 +128,30 @@ class Knot(Polyline):
 
             self.smooth.extend(self.get_points(ptn, self.count))
 
+def draw_help(steps):
+    """функция отрисовки экрана справки программы"""
+    gameDisplay.fill((50, 50, 50))
+    font1 = pygame.font.SysFont("courier", 24)
+    font2 = pygame.font.SysFont("serif", 24)
+    data = []
+    data.append(["F1", "Show Help"])
+    data.append(["R", "Restart"])
+    data.append(["P", "Pause/Play"])
+    data.append(["Q", "Exit"])
+    data.append(["Num+", "More points"])
+    data.append(["Num-", "Less points"])
+    data.append(["", ""])
+    data.append([str(steps), "Current points"])
+
+    pygame.draw.lines(gameDisplay, (255, 50, 50, 255), True, [
+        (0, 0), (800, 0), (800, 600), (0, 600)], 5)
+    for i, text in enumerate(data):
+        gameDisplay.blit(font1.render(
+            text[0], True, (128, 128, 255)), (100, 100 + 30 * i))
+        gameDisplay.blit(font2.render(
+            text[1], True, (128, 128, 255)), (200, 100 + 30 * i))
+
+
 
 # =======================================================================================
 # Основная программа
@@ -125,7 +161,7 @@ if __name__ == "__main__":
     gameDisplay = pygame.display.set_mode(SCREEN_DIM)
     pygame.display.set_caption("MyScreenSaver")
 
-    steps = 34 
+    steps = 2 
     working = True
     show_help = False
     pause = True
@@ -150,11 +186,11 @@ if __name__ == "__main__":
                 if event.key == pygame.K_q:
                     working = False
                 if event.key == pygame.K_KP_PLUS:
-                    steps += 1
-                #if event.key == pygame.K_F1:
-                #   show_help = not show_help
+                    line.count_inc()
+                if event.key == pygame.K_F1:
+                   show_help = not show_help
                 if event.key == pygame.K_KP_MINUS:
-                    steps -= 1 if steps > 1 else 0
+                    line.count_dec()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 point = Vec2d(event.pos[0], event.pos[1])
@@ -170,6 +206,8 @@ if __name__ == "__main__":
 
         if not pause:
             line.set_points()
+        if show_help:
+            draw_help(line.count_get())
 
         pygame.display.flip()
 
