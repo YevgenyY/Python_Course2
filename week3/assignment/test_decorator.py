@@ -5,6 +5,7 @@
 # Скопируйте код вашего решения в секцию ВАШ КОД и запустите скрипт
 # =============================================================================
 from abc import ABC, abstractmethod
+import inspect
 
 class Hero:
     def __init__(self):
@@ -41,8 +42,15 @@ class Hero:
 from abc import ABC, abstractmethod
 
 #1 Abstract decorator class
-class AbstractEffect(Hero):
+class AbstractEffect(Hero, ABC): 
+    
+    @abstractmethod
+    def apply_effects(self):
+        pass
+
     def __init__(self, base):
+        #super().__init__()
+
         self.base = base
         self.stats = self.base.stats
         self.positive_effects = [] #self.base.positive_effects
@@ -55,15 +63,12 @@ class AbstractEffect(Hero):
 
         self.apply_effects()
 
-        @abstractmethod
-        def apply_effects(self):
-            pass
 
     def get_positive_effects(self):
-        return self.positive_effects + self.base.get_positive_effects()
+        return self.base.get_positive_effects() + self.positive_effects
 
     def get_negative_effects(self):
-        return self.negative_effects + self.base.get_negative_effects()
+        return self.base.get_negative_effects() + self.negative_effects
 
     def get_stats(self):
         # calculate stats
@@ -113,7 +118,7 @@ class Berserk(AbstractPositive):
 
 """5 Increases: everything by 2
 """
-class Blessing:
+class Blessing(AbstractPositive):
     def incMainChars(self):
         for k in self.stats.keys():
             if k != "HP" and k != "MP" and k != "SP":
@@ -131,7 +136,7 @@ class Weakness(AbstractNegative):
             if k == "Strength" or k == "Endurance" or k == "Agility":
                 self.stats[k] = -4
 
-        self.positive_effects.append("Weakness")
+        self.negative_effects.append("Weakness")
 
 
    
@@ -163,6 +168,8 @@ class EvilEye(AbstractNegative):
 # =============================================================================
 
 if __name__ == '__main__':
+
+    print(inspect.isabstract(AbstractEffect))
     # создадим героя
     hero = Hero()
     # проверим правильность характеристик по-умолчанию
