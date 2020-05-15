@@ -5,11 +5,11 @@ class MappingAdapter:
     def _gen_map(self, grid):
         # no checking if grid is correct
 
-        # initialize grid
+        # initialize grids
         height = len(grid)
         width = len(grid[0])
 
-        self.adaptee.set_dim( (height, width) )
+        self.adaptee.set_dim( (height, weight) )
         self.newgrid = [[0 for i in range(width)] for _ in range(height)]
 
         # calculate lights/obstacles indexes
@@ -18,12 +18,14 @@ class MappingAdapter:
         for i in range(height):
             for j in range(width):
                 if grid[i][j] == 1:
+                    self.adaptee.grid[j][i] = 1
                     lights.append( (j, i) ) # use reverse coordinates
                 if grid[i][j] == -1:
-                    lights.append( (j, i) ) # use reverse coordinates
+                    self.adaptee.grid[j][i] = -1
+                    obstacles.append( (j, i) ) # use reverse coordinates
         
         self.adaptee.set_lights( lights )
-        self.adaptee.set_obstacles( lights )
+        self.adaptee.set_obstacles( obstacles )
 
         # call lightening
         tmp = self.adaptee.generate_lights()
@@ -31,7 +33,7 @@ class MappingAdapter:
         # recalculate grid
         for i in range(height):
             for j in range(width):
-                print("{} {}".format(i, j))
+                #print("{} {}".format(i, j))
                 self.newgrid[i][j] = tmp[j][i]
 
         return self.newgrid.copy()

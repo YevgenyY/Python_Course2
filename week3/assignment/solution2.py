@@ -54,10 +54,10 @@ class MappingAdapter:
                     lights.append( (j, i) ) # use reverse coordinates
                 if grid[i][j] == -1:
                     self.adaptee.grid[j][i] = -1
-                    lights.append( (j, i) ) # use reverse coordinates
+                    obstacles.append( (j, i) ) # use reverse coordinates
         
         self.adaptee.set_lights( lights )
-        self.adaptee.set_obstacles( lights )
+        self.adaptee.set_obstacles( obstacles )
 
         # call lightening
         tmp = self.adaptee.generate_lights()
