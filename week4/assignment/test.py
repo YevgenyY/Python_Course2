@@ -1,9 +1,3 @@
-class SomeObject:
-    def __init__(self):
-        self.integer_field = 0
-        self.float_field = 0.0
-        self.string_field = ""
-
 EV_GET, EV_SET = 0, 1
 
 class EventGet:
@@ -70,41 +64,4 @@ class FloatHandler(NullHandler):
         #print("FloatHandler: Passing the event further")
         return super().handle(obj, event)
 
-chain = IntHandler(FloatHandler(StrHandler(NullHandler)))
-
-obj = SomeObject()
-obj.integer_field = 43
-obj.string_field = "Initialized"
-obj.float_field = 0.07
-
-"""
-inthand = IntHandler(None)
-print( inthand.handle(obj, EventGet(int)) )
-
-inthand.handle(obj, EventSet(10))
-print( inthand.handle(obj, EventGet(int)) )
-
-strhand = StrHandler(None)
-print( strhand.handle(obj, EventGet(str)) )
-
-strhand.handle(obj, EventSet("It works"))
-print( strhand.handle(obj, EventGet(str)) )
-
-floathand = FloatHandler(None)
-print( floathand.handle(obj, EventGet(float)) )
-floathand.handle(obj, EventSet(0.007))
-print( floathand.handle(obj, EventGet(float)) )
-"""
-
-print("------------- Chain work ------------")
-print (chain.handle(obj, EventGet(str)))
-print(chain.handle(obj, EventGet(int)))
-print(chain.handle(obj, EventGet(float)))
-print("------------- Chain changed values ------------")
-chain.handle(obj, EventSet(-42))
-chain.handle(obj, EventSet("It works"))
-chain.handle(obj, EventSet(0.0000007))
-print (chain.handle(obj, EventGet(str)))
-print(chain.handle(obj, EventGet(int)))
-print(chain.handle(obj, EventGet(float)))
 
