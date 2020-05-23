@@ -133,8 +133,8 @@ def factory_constructor(loader, node):
     #print(loader)
     #print(node)
     data = loader.construct_mapping(node)
-    print("Node tag {}".format(node.tag))
-    print("Node data {}".format(data))
+    #print("Node tag {}".format(node.tag))
+    #print("Node data {}".format(data))
 
     factory = None
 
@@ -181,5 +181,5 @@ levels:
         enemy_count: 10
 ''')
 
-print("------------------------------")
-print(obj)
+#print("------------------------------")
+#print(obj)
