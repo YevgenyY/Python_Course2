@@ -133,16 +133,26 @@ def factory_constructor(loader, node):
     #print(loader)
     #print(node)
     data = loader.construct_mapping(node)
-    #print(node.tag)
-    #print(data)
+    print("Node tag {}".format(node.tag))
+    print("Node data {}".format(data))
+
+    factory = None
 
 
     if node.tag == "!easy_level":
-        return EasyLevel
+        factory = EasyLevel
     if node.tag == "!medium_level":
-        return MediumLevel
+        factory = MediumLevel
     if node.tag == "!hard_level":
-        return HardLevel
+        factory = HardLevel
+
+    _map = factory.Map()
+    _obj = factory.Objects()
+    _obj.config = data
+
+    res = {'map': _map, 'obj': _obj}
+
+    return res
 
 class Levels:
     def __init__(self, value):
@@ -171,5 +181,5 @@ levels:
         enemy_count: 10
 ''')
 
-#print("------------------------------")
-#print(obj)
+print("------------------------------")
+print(obj)
